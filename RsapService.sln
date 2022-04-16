@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsapService", "RsapService\RsapService.csproj", "{86534B81-8B70-451A-A048-FB2D002670F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsapServiceTests", "RsapServiceTests\RsapServiceTests.csproj", "{2515F4AF-D934-445E-B484-46F420960154}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86534B81-8B70-451A-A048-FB2D002670F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86534B81-8B70-451A-A048-FB2D002670F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86534B81-8B70-451A-A048-FB2D002670F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86534B81-8B70-451A-A048-FB2D002670F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2515F4AF-D934-445E-B484-46F420960154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2515F4AF-D934-445E-B484-46F420960154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2515F4AF-D934-445E-B484-46F420960154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2515F4AF-D934-445E-B484-46F420960154}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {03812671-3FDB-4939-AF88-AA3105C71487}
+	EndGlobalSection
+EndGlobal
