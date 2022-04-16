@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RsapService")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription(".NET SDK to communicate with the CLRA RSAP (Rapid Site Access Program) API")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Pivotal Technology Inc")]
 [assembly: AssemblyProduct("RsapService")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
