@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RsapService
 {
@@ -24,11 +25,15 @@ namespace RsapService
             }
         }
         public OAuthResponseModel Token { get; private set; }
+        public const string contractorEndpoint = "api/contractors";
+        public const string statusEndpointAll = "api/members/status";
+        public const string statusEndpointSingle = "api/member/{0}/status";
+        public const string oauthEndpoint = "oauth/token";
 
 
         // Constructor
         /// <summary>
-        /// 
+        /// Initialize Service class to start
         /// </summary>
         /// <param name="baseUrl"></param>
         /// <param name="httpClient"></param>
@@ -59,46 +64,72 @@ namespace RsapService
         }
         private string Get(string endpoint, bool addRequestHeader = true)
         {
-            string uri = string.Empty;
-            if (_BaseUrl.EndsWith("/"))
-            {
-                uri = string.Format("{0}{1}", _BaseUrl, endpoint);
-            }
-            else
-            {
-                uri = string.Format("{0}/{1}", _BaseUrl, endpoint);
-            }
+            string uri = GetUri(endpoint);
 
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = new HttpRequestMessage();
             request.Method = HttpMethod.Get;
             request.RequestUri = new Uri(uri);
 
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
                 AddRequestHeaders(request);
             }
 
             var response = _HttpClient.SendAsync(request).Result;
 
-            if (!response.IsSuccessStatusCode)
-            {
-                //ToDo: Handle errors
-                throw new Exception(response.ReasonPhrase);
-            }
+            ValidateResponse(response);
 
-            string result = response.Content.ReadAsStringAsync().Result;
-
-            if (string.IsNullOrWhiteSpace(result))
-            {
-                //ToDo: Handle empty response
-                throw new Exception("Rsap response came back empty.");
-            }
+            string result = GetResponseContent(response);
 
             return result;
         }
-        private HttpResponseMessage Post(string endpoint, string content, bool addRequestHeader = true)
+        private async Task<string> GetAsync(string endpoint, bool addRequestHeader = true)
+        {
+            string uri = GetUri(endpoint);
+
+            var request = new HttpRequestMessage();
+            request.Method = HttpMethod.Get;
+            request.RequestUri = new Uri(uri);
+
+            if (addRequestHeader)
+            {
+                //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                AddRequestHeaders(request);
+            }
+
+            var response = await _HttpClient.SendAsync(request);
+
+            ValidateResponse(response);
+
+            string result = await GetResponseContentAsync(response);
+
+            return result;
+        }
+        private OAuthRequestModel GetOAuthRequestModel(int clientId, string clientSecret)
+        {
+            var requestModel = new OAuthRequestModel()
+            {
+                GrantType = "client_credentials",
+                ClientId = clientId,
+                ClientSecret = clientSecret,
+                Scope = ""
+            };
+            return requestModel;
+        }
+        private string GetResponseContent(HttpResponseMessage response)
+        {
+            string result = response.Content.ReadAsStringAsync().Result;
+            return result;
+        }
+        private async Task<string> GetResponseContentAsync(HttpResponseMessage response)
+        {
+            string result = await response.Content.ReadAsStringAsync();
+            return result;
+        }
+        private string GetUri(string endpoint)
         {
             string uri = string.Empty;
             if (_BaseUrl.EndsWith("/"))
@@ -109,8 +140,13 @@ namespace RsapService
             {
                 uri = string.Format("{0}/{1}", _BaseUrl, endpoint);
             }
+            return uri;
+        }
+        private HttpResponseMessage Post(string endpoint, string content, bool addRequestHeader = true)
+        {
+            string uri = GetUri(endpoint);
 
-            HttpRequestMessage request = new HttpRequestMessage();
+            var request = new HttpRequestMessage();
             request.Method = HttpMethod.Post;
             request.RequestUri = new Uri(uri);
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
@@ -118,12 +154,63 @@ namespace RsapService
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
                 AddRequestHeaders(request);
             }
 
             var response = _HttpClient.SendAsync(request).Result;
 
+            ValidateResponse(response);
+
+            return response;
+        }
+        private async Task<HttpResponseMessage> PostAsync(string endpoint, string content, bool addRequestHeader = true)
+        {
+            string uri = GetUri(endpoint);
+
+            var request = new HttpRequestMessage();
+            request.Method = HttpMethod.Post;
+            request.RequestUri = new Uri(uri);
+            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
+
+            if (addRequestHeader)
+            {
+                //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                AddRequestHeaders(request);
+            }
+
+            var response = await _HttpClient.SendAsync(request);
+
+            ValidateResponse(response);
+
+            return response;
+        }
+        private ContractorResponseModel[] ParseContractorResponseString(string responseStr)
+        {
+            ContractorResponseModel[] results = Newtonsoft.Json.JsonConvert.DeserializeObject<ContractorResponseModel[]>(responseStr);
+            foreach (var result in results)
+            {
+                result.RawData = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            }
+            return results;
+        }
+        private OAuthResponseModel ParseOAuthResponseString(string responseStr)
+        {
+            OAuthResponseModel result = Newtonsoft.Json.JsonConvert.DeserializeObject<OAuthResponseModel>(responseStr);
+
+            if (!string.IsNullOrWhiteSpace(result.Error))
+            {
+                throw new Exception(result.Error);
+            }
+
+            Token = result;
+            Token.ExpiresAt = DateTime.Now.AddSeconds(result.ExpiresIn);
+
+            return result;
+        }
+        private void ValidateResponse(HttpResponseMessage response)
+        {
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 // Handle unauthorized error
@@ -135,8 +222,6 @@ namespace RsapService
                 // Handle empty response
                 throw new Exception("Rsap response came back empty.");
             }
-
-            return response;
         }
 
 
@@ -147,20 +232,35 @@ namespace RsapService
         /// <returns>Array of ContractorResponseModel</returns>
         public ContractorResponseModel[] GetContractors()
         {
-            ContractorResponseModel[] results = null;
-
-            string endpoint = "api/contractors";
+            ContractorResponseModel[] results;
 
             try
             {
-                var response = Get(endpoint, true);
+                string response = Get(contractorEndpoint, true);
 
-                results = Newtonsoft.Json.JsonConvert.DeserializeObject<ContractorResponseModel[]>(response);
+                results = ParseContractorResponseString(response);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-                foreach (var result in results)
-                {
-                    result.RawData = Newtonsoft.Json.JsonConvert.SerializeObject(result);
-                }
+            return results;
+        }
+
+        /// <summary>
+        /// Get contractors from RSAP API.
+        /// </summary>
+        /// <returns>Array of ContractorResponseModel</returns>
+        public async Task<ContractorResponseModel[]> GetContractorsAsync()
+        {
+            ContractorResponseModel[] results;
+
+            try
+            {
+                string response = await GetAsync(contractorEndpoint, true);
+
+                results = ParseContractorResponseString(response);
             }
             catch (Exception ex)
             {
@@ -180,6 +280,15 @@ namespace RsapService
         }
 
         /// <summary>
+        /// Get statuses for all members excluding sin from RSAP API.
+        /// </summary>
+        /// <returns>Array of MemberStatusResponseModel</returns>
+        public async Task<MemberStatusResponseModel[]> GetMemberStatusAsync()
+        {
+            return await GetMemberStatusAsync(programId: null, includeSin: null);
+        }
+
+        /// <summary>
         /// Get statuses for all members, optionally including sin from RSAP API.
         /// </summary>
         /// <param name="includeSin"></param>
@@ -187,6 +296,16 @@ namespace RsapService
         public MemberStatusResponseModel[] GetMemberStatus(bool? includeSin = null)
         {
             return GetMemberStatus(programId: null, includeSin: includeSin);
+        }
+
+        /// <summary>
+        /// Get statuses for all members, optionally including sin from RSAP API.
+        /// </summary>
+        /// <param name="includeSin"></param>
+        /// <returns>Array of MemberStatusResponseModel</returns>
+        public async Task<MemberStatusResponseModel[]> GetMemberStatusAsync(bool? includeSin = null)
+        {
+            return await GetMemberStatusAsync(programId: null, includeSin: includeSin);
         }
 
         /// <summary>
@@ -199,9 +318,9 @@ namespace RsapService
         {
             MemberStatusResponseModel[] results = null;
 
-            string endpoint = "api/members/status";
+            string endpoint = statusEndpointAll;
             if (programId.HasValue)
-                endpoint = string.Format("api/member/{0}/status", programId.Value);
+                endpoint = string.Format(statusEndpointSingle, programId.Value);
 
             if (includeSin.HasValue)
                 endpoint += "?sin=" + includeSin.ToString().ToLower();
@@ -209,6 +328,50 @@ namespace RsapService
             try
             {
                 var response = Get(endpoint, true);
+
+                if (programId.HasValue)
+                {
+                    var result = Newtonsoft.Json.JsonConvert.DeserializeObject<MemberStatusResponseModel>(response);
+                    results = new MemberStatusResponseModel[] { result };
+                }
+                else
+                {
+                    results = Newtonsoft.Json.JsonConvert.DeserializeObject<MemberStatusResponseModel[]>(response);
+                }
+
+                foreach (var result in results)
+                {
+                    result.RawData = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Get statuses for all members, or for a specific member, optionally including sin from RSAP API.
+        /// </summary>
+        /// <param name="programId"></param>
+        /// <param name="includeSin"></param>
+        /// <returns>ARray of MemberStatusResponseModel</returns>
+        public async Task<MemberStatusResponseModel[]> GetMemberStatusAsync(int? programId = null, bool? includeSin = null)
+        {
+            MemberStatusResponseModel[] results = null;
+
+            string endpoint = statusEndpointAll;
+            if (programId.HasValue)
+                endpoint = string.Format(statusEndpointSingle, programId.Value);
+
+            if (includeSin.HasValue)
+                endpoint += "?sin=" + includeSin.ToString().ToLower();
+
+            try
+            {
+                var response = await GetAsync(endpoint, true);
 
                 if (programId.HasValue)
                 {
@@ -281,6 +444,28 @@ namespace RsapService
         /// <param name="models"></param>
         /// <returns>HttpResponseMessage</returns>
         /// <remarks>Response 200 indicates records were processed. Response 401 unauthorized. Response 422 indicates errors occurred requiring problem records to be removed and request resubmitted.</remarks>
+        public async Task<HttpResponseMessage> PostDispatchAsync<HttpRepsonseMessage>(DispatchRequestModel[] models)
+        {
+            string endpoint = "api/dispatch";
+            string content = Newtonsoft.Json.JsonConvert.SerializeObject(models);
+
+            try
+            {
+                var response = await PostAsync(endpoint, content, true);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Submit dispatch information to RSAP API.
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns>HttpResponseMessage</returns>
+        /// <remarks>Response 200 indicates records were processed. Response 401 unauthorized. Response 422 indicates errors occurred requiring problem records to be removed and request resubmitted.</remarks>
         public DispatchResponseModel[] PostDispatch(DispatchRequestModel[] models)
         {
             try
@@ -297,39 +482,77 @@ namespace RsapService
         }
 
         /// <summary>
+        /// Submit dispatch information to RSAP API.
+        /// </summary>
+        /// <param name="models"></param>
+        /// <returns>HttpResponseMessage</returns>
+        /// <remarks>Response 200 indicates records were processed. Response 401 unauthorized. Response 422 indicates errors occurred requiring problem records to be removed and request resubmitted.</remarks>
+        public async Task<DispatchResponseModel[]> PostDispatchAsync(DispatchRequestModel[] models)
+        {
+            try
+            {
+                var response = await PostDispatchAsync<HttpResponseMessage>(models);
+                string responseStr = await response.Content.ReadAsStringAsync();
+                DispatchResponseModel[] responseModels = Newtonsoft.Json.JsonConvert.DeserializeObject<DispatchResponseModel[]>(responseStr);
+                return responseModels;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
         /// Get OAuth token for use in subsequent calls to RSAP API.
         /// </summary>
         /// <param name="model"></param>
         /// <returns>OAuthResponseModel</returns>
         public OAuthResponseModel PostOAuth(int clientId, string clientSecret)
         {
-            var requestModel = new OAuthRequestModel()
-            {
-                GrantType = "client_credentials",
-                ClientId = clientId,
-                ClientSecret = clientSecret,
-                Scope = ""
-            };
-            string endpoint = "oauth/token";
+            var requestModel = GetOAuthRequestModel(clientId, clientSecret);
             string content = Newtonsoft.Json.JsonConvert.SerializeObject(requestModel);
 
             OAuthResponseModel result;
 
             try
             {
-                var response = Post(endpoint, content, false);
+                var response = Post(oauthEndpoint, content, false);
 
-                string responseContent = response.Content.ReadAsStringAsync().Result;
+                ValidateResponse(response);
 
-                result = Newtonsoft.Json.JsonConvert.DeserializeObject<OAuthResponseModel>(responseContent);
+                string responseStr = GetResponseContent(response);
 
-                if (!string.IsNullOrWhiteSpace(result.Error))
-                {
-                    throw new Exception(result.Error);
-                }
+                result = ParseOAuthResponseString(responseStr);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
-                Token = result;
-                Token.ExpiresAt = DateTime.Now.AddSeconds(result.ExpiresIn);
+            return Token;
+        }
+
+        /// <summary>
+        /// Get OAuth token for use in subsequent calls to RSAP API.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>OAuthResponseModel</returns>
+        public async Task<OAuthResponseModel> PostOAuthAsync(int clientId, string clientSecret)
+        {
+            var requestModel = GetOAuthRequestModel(clientId, clientSecret);
+            string content = Newtonsoft.Json.JsonConvert.SerializeObject(requestModel);
+
+            OAuthResponseModel result;
+
+            try
+            {
+                var response = await PostAsync(oauthEndpoint, content, false);
+
+                ValidateResponse(response);
+
+                string responseStr = await GetResponseContentAsync(response);
+
+                result = ParseOAuthResponseString(responseStr);
             }
             catch (Exception ex)
             {
