@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RsapServiceTests
 {
     [TestClass]
-    public class Tests
+    public class FrameworkTests
     {
         [ClassInitialize]
         public static void Init(TestContext context)
