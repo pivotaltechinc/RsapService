@@ -1,7 +1,7 @@
 # RsapService Overview
 .NET SDK to communicate with the CLRA RSAP (Rapid Site Access Program) API
 
-RSAP API documentation is freely available (at the time of writing) on https://app.swaggerhub.com/apis-docs/pderas/RSAP/2.0.1.
+The RSAP API was developed by https://pderas.com/, and documentation is freely available (at time of writing) here: https://app.swaggerhub.com/apis-docs/pderas/RSAP/2.0.1.
 
 The code written here is not special or proprietary, it's just code that would have to be written by .NET C# developers wanting to communicate with the RSAP API.
 
@@ -11,6 +11,10 @@ Nuget package available to assist other developers (https://www.nuget.org/packag
 - Get Contractors
 - Get Member Statuses
 - Submit Dispatch information
+
+# Versions
+- 1.0.1 - Built on .NET Framework 4.6.2. Should be compatible with any Framework version above 4.6.2 up to 4.8.
+- 2.0.1 - Built on .NET Standard 2.0. Should also work with .NET Standard 2.1.
 
 # Usage Tips
 When initializing the RsapService class, you must provide the RSAP base URL and a HttpClient.
