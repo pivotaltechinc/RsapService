@@ -73,7 +73,7 @@ namespace RsapService
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 AddRequestHeaders(request);
             }
 
@@ -96,7 +96,7 @@ namespace RsapService
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 AddRequestHeaders(request);
             }
 
@@ -154,7 +154,7 @@ namespace RsapService
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 AddRequestHeaders(request);
             }
 
@@ -176,7 +176,7 @@ namespace RsapService
             if (addRequestHeader)
             {
                 //! Only set security protocol if adding token request header. Otherwise RSAP API fails.
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 AddRequestHeaders(request);
             }
 

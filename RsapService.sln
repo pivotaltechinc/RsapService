@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsapServiceFramework", "Rsa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsapServiceTests", "RsapServiceTests\RsapServiceTests.csproj", "{2515F4AF-D934-445E-B484-46F420960154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RsapServiceStandard", "RsapServiceStandard\RsapServiceStandard.csproj", "{E01827FA-9163-4B2A-BB0D-43F0354648FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RsapServiceStandard", "RsapServiceStandard\RsapServiceStandard.csproj", "{E01827FA-9163-4B2A-BB0D-43F0354648FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -43,19 +43,19 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api-test.rsap.ca")]
-        public string RsapBaseUrl {
+        [global::System.Configuration.DefaultSettingValueAttribute("path-to-your-certificate-pfx-file")]
+        public string CertPfxFilePath {
             get {
-                return ((string)(this["RsapBaseUrl"]));
+                return ((string)(this["CertPfxFilePath"]));
             }
         }
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("path-to-your-certificate-pfx-file")]
-        public string CertPfxFilePath {
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api-test.rsap.ca/")]
+        public string RsapBaseUrl {
             get {
-                return ((string)(this["CertPfxFilePath"]));
+                return ((string)(this["RsapBaseUrl"]));
             }
         }
     }
