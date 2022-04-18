@@ -12,6 +12,10 @@ Nuget package available to assist other developers (https://www.nuget.org/packag
 - Get Member Statuses
 - Submit Dispatch information
 
+# Versions
+- 1.0.1 - Built on .NET Framework 4.6.2
+- 2.0.1 - Built on .NET Standard 2.0
+
 # Usage Tips
 When initializing the RsapService class, you must provide the RSAP base URL and a HttpClient.
 - BaseUrl: something like 'https://test-api.rsap.ca/'.
