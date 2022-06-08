@@ -25,7 +25,16 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://api-test.rsap.ca/")]
+        public string RsapBaseUrl {
+            get {
+                return ((string)(this["RsapBaseUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
         public int RsapClientId {
             get {
                 return ((int)(this["RsapClientId"]));
@@ -34,7 +43,7 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("your-client-secret")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ycy7AAz11qBJE4jsrWDoqUuQmc3OmKeXNr4RIdHH")]
         public string RsapClientSecret {
             get {
                 return ((string)(this["RsapClientSecret"]));
@@ -43,19 +52,10 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("path-to-your-certificate-pfx-file")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Ryan\\Downloads\\RSAP_API_BKY\\union_client_certificate.pfx")]
         public string CertPfxFilePath {
             get {
                 return ((string)(this["CertPfxFilePath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api-test.rsap.ca/")]
-        public string RsapBaseUrl {
-            get {
-                return ((string)(this["RsapBaseUrl"]));
             }
         }
     }

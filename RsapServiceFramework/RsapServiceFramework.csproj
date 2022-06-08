@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Models\ContractorResponseModel.cs" />
     <Compile Include="Models\DispatchRequestModel.cs" />
+    <Compile Include="Models\DispatchRequestNotWorkingModel.cs" />
     <Compile Include="Models\DispatchResponseModel.cs" />
     <Compile Include="Models\MemberStatusResponseModel.cs" />
     <Compile Include="Models\OAuthRequestModel.cs" />

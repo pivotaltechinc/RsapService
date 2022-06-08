@@ -1,5 +1,6 @@
 ﻿using RsapService.Models;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -16,7 +17,7 @@ namespace RsapService
             {
                 string result = null;
 
-                if(Token != null)
+                if (Token != null)
                 {
                     result = Token.AccessToken;
                 }
@@ -142,6 +143,27 @@ namespace RsapService
             }
             return uri;
         }
+        private List<object> GetWorkingNotWorkingModels(DispatchRequestModel[] models)
+        {
+            var list = new List<object>();
+            foreach (var model in models)
+            {
+                if (!model.Working)
+                {
+                    list.Add(new DispatchRequestNotWorkingModel()
+                    {
+                        Working = model.Working,
+                        DispatchDate = model.DispatchDate,
+                        ProgramId = model.ProgramId
+                    });
+                }
+                else
+                {
+                    list.Add(model);
+                }
+            }
+            return list;
+        }
         private HttpResponseMessage Post(string endpoint, string content, bool addRequestHeader = true)
         {
             string uri = GetUri(endpoint);
@@ -221,6 +243,11 @@ namespace RsapService
             {
                 // Handle empty response
                 throw new Exception("Rsap response came back empty.");
+            }
+
+            if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
+            {
+                throw new Exception("Service Unavailable. Base URL may be incorrect.");
             }
         }
 
@@ -405,9 +432,9 @@ namespace RsapService
         {
             bool result = false;
 
-            if(Token != null)
+            if (Token != null)
             {
-                if(!string.IsNullOrWhiteSpace(Token.AccessToken) && Token.ExpiresAt > DateTime.Now)
+                if (!string.IsNullOrWhiteSpace(Token.AccessToken) && Token.ExpiresAt > DateTime.Now)
                 {
                     result = true;
                 }
@@ -425,7 +452,10 @@ namespace RsapService
         public HttpResponseMessage PostDispatch<HttpRepsonseMessage>(DispatchRequestModel[] models)
         {
             string endpoint = "api/dispatch";
-            string content = Newtonsoft.Json.JsonConvert.SerializeObject(models);
+
+            var list = GetWorkingNotWorkingModels(models);
+
+            string content = Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
 
             try
             {
@@ -447,7 +477,10 @@ namespace RsapService
         public async Task<HttpResponseMessage> PostDispatchAsync<HttpRepsonseMessage>(DispatchRequestModel[] models)
         {
             string endpoint = "api/dispatch";
-            string content = Newtonsoft.Json.JsonConvert.SerializeObject(models);
+
+            var list = GetWorkingNotWorkingModels(models);
+
+            string content = Newtonsoft.Json.JsonConvert.SerializeObject(list.ToArray());
 
             try
             {

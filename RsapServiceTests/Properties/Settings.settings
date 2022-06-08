@@ -2,17 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RsapServiceTests.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="RsapClientId" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="RsapClientSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">your-client-secret</Value>
-    </Setting>
-    <Setting Name="CertPfxFilePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">path-to-your-certificate-pfx-file</Value>
-    </Setting>
     <Setting Name="RsapBaseUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)">https://api-test.rsap.ca/</Value>
+    </Setting>
+    <Setting Name="RsapClientId" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="RsapClientSecret" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ycy7AAz11qBJE4jsrWDoqUuQmc3OmKeXNr4RIdHH</Value>
+    </Setting>
+    <Setting Name="CertPfxFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Ryan\Downloads\RSAP_API_BKY\union_client_certificate.pfx</Value>
     </Setting>
   </Settings>
 </SettingsFile>

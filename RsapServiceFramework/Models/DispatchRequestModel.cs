@@ -3,17 +3,8 @@ using System;
 
 namespace RsapService.Models
 {
-    public class DispatchRequestModel
+    public class DispatchRequestModel : DispatchRequestNotWorkingModel
     {
-        [JsonProperty("programId")]
-        public int ProgramId { get; set; }
-
-        [JsonProperty("working")]
-        public bool Working { get; set; }
-
-        [JsonProperty("dispatchDate")]
-        public string DispatchDate { get; set; }
-
         [JsonProperty("contractorUuid")]
         public string ContractorUuid { get; set; }
 
