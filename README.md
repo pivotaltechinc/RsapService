@@ -3,9 +3,9 @@
 
 The RSAP API was developed by https://pderas.com/, and documentation is freely available (at time of writing) here: https://app.swaggerhub.com/apis-docs/pderas/RSAP/2.0.1.
 
-The code written here is not special or proprietary, it's just code that would have to be written by .NET C# developers wanting to communicate with the RSAP API.
+This SDK code is not special or proprietary, it's just code that would have to be written by .NET C# developers wanting to communicate with the RSAP API.
 
-Nuget package available to assist other developers (https://www.nuget.org/packages/RsapService/).  Search for 'rsap' or 'rsapservice' in Visual Studio Nuget Package Manager.
+Nuget package available here: (https://www.nuget.org/packages/RsapService/). Search for 'rsap' or 'rsapservice' in Visual Studio Nuget Package Manager.
 
 # Description
 - Get Contractors
@@ -13,8 +13,8 @@ Nuget package available to assist other developers (https://www.nuget.org/packag
 - Submit Dispatch information
 
 # Versions
-- 1.0.1 - Built on .NET Framework 4.6.2. Should be compatible with any Framework version above 4.6.2 up to 4.8.
-- 2.0.1 - Built on .NET Standard 2.0. Should also work with .NET Standard 2.1.
+- 1.0.5 - Built on .NET Framework 4.6.2. Should be compatible with any Framework version above 4.6.2 up to 4.8.
+- 2.0.5 - Built on .NET Standard 2.0. Should also work with .NET Standard 2.1.
 
 # Usage Tips
 When initializing the RsapService class, you must provide the RSAP base URL and a HttpClient.
