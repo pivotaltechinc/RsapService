@@ -12,7 +12,7 @@ namespace RsapServiceTests.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -34,7 +34,7 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int RsapClientId {
             get {
                 return ((int)(this["RsapClientId"]));
@@ -43,7 +43,7 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ycy7AAz11qBJE4jsrWDoqUuQmc3OmKeXNr4RIdHH")]
+        [global::System.Configuration.DefaultSettingValueAttribute("your-client-secret")]
         public string RsapClientSecret {
             get {
                 return ((string)(this["RsapClientSecret"]));
@@ -52,7 +52,7 @@ namespace RsapServiceTests.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Ryan\\Downloads\\RSAP_API_BKY\\union_client_certificate.pfx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("path-to-your-certificate-pfx-file")]
         public string CertPfxFilePath {
             get {
                 return ((string)(this["CertPfxFilePath"]));

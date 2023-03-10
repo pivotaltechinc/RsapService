@@ -15,6 +15,7 @@ Nuget package available here: (https://www.nuget.org/packages/RsapService/). Sea
 # Versions
 - 1.0.5 - Built on .NET Framework 4.6.2. Should be compatible with any Framework version above 4.6.2 up to 4.8.
 - 2.0.7 - Built on .NET Standard 2.0. Should work with .NET Framework versions as well as .NET Standard 2.1.
+- 2.0.9 - Update to include 'error' property in the DispatchResponseModel.
 
 # Usage Tips
 When initializing the RsapService class, you must provide the RSAP base URL and a HttpClient.

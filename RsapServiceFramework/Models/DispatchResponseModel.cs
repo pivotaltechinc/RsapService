@@ -13,5 +13,8 @@ namespace RsapService.Models
 
         [JsonProperty("message")]
         public string Message { get; set; }
+
+        [JsonProperty("error")]
+        public string Error { get; set; }
     }
 }
